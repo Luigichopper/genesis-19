@@ -35,4 +35,3 @@ script = ExtResource("2_gmfve")
 
 [node name="VoicePlayer" type="AudioStreamPlayer3D" parent="VoiceChat" unique_id=1053419512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-bus = &"VoiceChat"
