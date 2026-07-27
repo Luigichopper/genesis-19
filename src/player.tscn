@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://bgbq8ui50vhe8"]
+
+[ext_resource type="Script" uid="uid://ctjskahdcayvm" path="res://src/player.gd" id="1_lowyb"]
+[ext_resource type="Script" uid="uid://ba4ulsdv4t86q" path="res://src/voice_chat.gd" id="2_gmfve"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tihks"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ihbif"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sh265"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("../Player:rotation:y")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D" unique_id=140702344]
+script = ExtResource("1_lowyb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1894758636]
+shape = SubResource("CapsuleShape3D_tihks")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1201812865]
+mesh = SubResource("CapsuleMesh_ihbif")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1999194903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -0.2)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1783836617]
+replication_config = SubResource("SceneReplicationConfig_sh265")
+
+[node name="VoiceChat" type="Node3D" parent="." unique_id=355122346]
+script = ExtResource("2_gmfve")
+
+[node name="VoicePlayer" type="AudioStreamPlayer3D" parent="VoiceChat" unique_id=1053419512]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+bus = &"VoiceChat"
