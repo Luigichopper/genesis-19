@@ -14,6 +14,7 @@ const GAME_SCENE := "res://src/main.tscn"
 
 var lobby_id: int = 0
 var players: Dictionary = {} # steam_id -> { "name": String }
+var in_game: bool = false
 
 func _ready() -> void:
 	Steam.lobby_created.connect(_on_lobby_created)
@@ -81,7 +82,6 @@ func _on_lobby_joined(lobby: int, _perm: int, _locked: bool, response: int) -> v
 func _on_join_requested(lobby: int, _friend_id: int) -> void:
 	join_lobby(lobby)
 
-@warning_ignore("unused_parameter")
 func _on_lobby_match_list(lobbies: Array) -> void:
 	# Populate a lobby browser UI with `lobbies` (array of lobby ids) if wanted.
 	pass
@@ -119,6 +119,7 @@ func leave_lobby() -> void:
 	if multiplayer.multiplayer_peer:
 		multiplayer.multiplayer_peer.close()
 	lobby_id = 0
+	in_game = false
 	players.clear()
 
 # ---------- Starting the game ----------
@@ -132,13 +133,19 @@ func start_game() -> void:
 
 @rpc("authority", "call_local", "reliable")
 func _change_scene(scene_path: String) -> void:
+	in_game = true
 	game_starting.emit()
 	get_tree().change_scene_to_file(scene_path)
 
 # ---------- Multiplayer signals ----------
 
 func _on_peer_connected(id: int) -> void:
-	if multiplayer.is_server():
+	# During the lobby phase, peers connecting shouldn't try to spawn into
+	# a PlayerContainer that doesn't exist yet — spawn_existing_players()
+	# (called from the game scene's own _ready()) handles the initial spawn.
+	# This only matters for players who join AFTER the game has already
+	# started (late joiners), if you support that.
+	if multiplayer.is_server() and in_game:
 		_spawn_player(id)
 	player_list_changed.emit()
 
