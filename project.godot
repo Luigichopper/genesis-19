@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+ConfigManager="*uid://b5f24xgb3lbdb"
 NetworkManager="*uid://c2336iil3epny"
-SteamManager="uid://ud6gyljykwnk"
 
 [debug]
 
