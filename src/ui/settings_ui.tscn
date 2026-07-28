@@ -12,7 +12,6 @@ grow_vertical = 2
 script = ExtResource("1_script")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1472621719]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -130,6 +129,7 @@ layout_mode = 2
 text = "Back"
 
 [node name="ExitPromptContainer" type="PanelContainer" parent="." unique_id=21828690]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -143,6 +143,27 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ExitPromptLabel" type="Label" parent="ExitPromptContainer" unique_id=801231708]
+[node name="VBoxContainer" type="VBoxContainer" parent="ExitPromptContainer" unique_id=1318298950]
+layout_mode = 2
+
+[node name="ExitPromptLabel" type="Label" parent="ExitPromptContainer/VBoxContainer" unique_id=801231708]
 layout_mode = 2
 text = "Save Changed Settings?"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ExitPromptContainer/VBoxContainer" unique_id=651090760]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="YesButton" type="Button" parent="ExitPromptContainer/VBoxContainer/HBoxContainer" unique_id=531528409]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Yes
+"
+
+[node name="NoButton" type="Button" parent="ExitPromptContainer/VBoxContainer/HBoxContainer" unique_id=228989274]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "No"

@@ -14,12 +14,20 @@ extends Control
 @onready var apply_button: Button = $PanelContainer/VBoxContainer/ButtonContainer/ApplyButton
 @onready var back_button: Button = $PanelContainer/VBoxContainer/ButtonContainer/BackButton
 
+@onready var exit_prompt_container: PanelContainer = $ExitPromptContainer
+@onready var yes_save_button: Button = $ExitPromptContainer/VBoxContainer/HBoxContainer/YesButton
+@onready var no_save_button: Button = $ExitPromptContainer/VBoxContainer/HBoxContainer/NoButton
+
+var is_settings_saved: bool = false
+
 func _ready() -> void:
 	_populate_audio_sliders()
 	_populate_voice_settings()
 	
 	apply_button.pressed.connect(_on_apply_pressed)
 	back_button.pressed.connect(_on_back_pressed)
+	yes_save_button.pressed.connect(_on_yes_save_pressed)
+	no_save_button.pressed.connect(_on_no_save_pressed)
 
 func _populate_audio_sliders() -> void:
 	var sliders: Dictionary = {
@@ -83,5 +91,16 @@ func _on_apply_pressed() -> void:
 	ConfigManager.save_settings()
 
 func _on_back_pressed() -> void:
+	if is_settings_saved:
+		hide()
+	else:
+		exit_prompt_container.show()
+
+func _on_yes_save_pressed() -> void:
 	ConfigManager.save_settings()
+	exit_prompt_container.hide()
+	hide()
+
+func _on_no_save_pressed() -> void:
+	exit_prompt_container.hide()
 	hide()
