@@ -49,6 +49,10 @@ layout_mode = 2
 [node name="PlayerListContainer" type="VBoxContainer" parent="LobbyPanel" unique_id=2085667430]
 layout_mode = 2
 
+[node name="InviteButton" type="Button" parent="LobbyPanel" unique_id=168202711]
+layout_mode = 2
+text = "Invite Friends"
+
 [node name="StartButton" type="Button" parent="LobbyPanel" unique_id=450937771]
 layout_mode = 2
 text = "Start"

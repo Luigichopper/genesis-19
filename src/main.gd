@@ -4,5 +4,7 @@ extends Node3D
 # Expects a direct child named "PlayerContainer" with a MultiplayerSpawner
 # elsewhere in the scene watching that path.
 
+@onready var container := $PlayerContainer
+
 func _ready() -> void:
-	NetworkManager.spawn_existing_players()
+	NetworkManager.spawn_existing_players(container)

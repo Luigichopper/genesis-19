@@ -122,6 +122,12 @@ func leave_lobby() -> void:
 	in_game = false
 	players.clear()
 
+func invite_friends() -> void:
+	if lobby_id == 0:
+		push_warning("Can't invite: not in a lobby yet.")
+		return
+	Steam.activateGameOverlayInviteDialog(lobby_id)
+
 # ---------- Starting the game ----------
 # Only the host calls start_game(); the RPC below propagates the scene
 # change to every connected client at the same moment.
@@ -145,8 +151,6 @@ func _on_peer_connected(id: int) -> void:
 	# (called from the game scene's own _ready()) handles the initial spawn.
 	# This only matters for players who join AFTER the game has already
 	# started (late joiners), if you support that.
-	if multiplayer.is_server() and in_game:
-		_spawn_player(id)
 	player_list_changed.emit()
 
 func _on_peer_disconnected(id: int) -> void:
@@ -163,25 +167,24 @@ func _on_connection_failed() -> void:
 
 func _on_server_disconnected() -> void:
 	push_warning("Host disconnected.")
-	get_tree().change_scene_to_file("res://ui/main_menu.tscn")
+	get_tree().change_scene_to_file("res://src/lobby_ui.tscn")
 
 # ---------- Player spawning ----------
 # The host owns spawning; MultiplayerSpawner replicates the node creation
 # to clients automatically as long as it's watching PlayerContainer's path.
 
-func spawn_existing_players() -> void:
+func spawn_existing_players(container: Node3D) -> void:
 	# Call this from the game scene's own _ready() (host only does anything;
 	# clients just wait for the spawner to replicate what the host creates).
 	# Handles the host's own player, which peer_connected never covers,
 	# plus anyone who was already connected before this scene loaded.
 	if not multiplayer.is_server():
 		return
-	_spawn_player(1) # the host itself
+	_spawn_player(1, container) # the host itself
 	for peer_id in multiplayer.get_peers():
-		_spawn_player(peer_id)
+		_spawn_player(peer_id, container)
 
-func _spawn_player(peer_id: int) -> void:
-	var container := get_tree().current_scene.get_node("PlayerContainer")
+func _spawn_player(peer_id: int, container: Node3D) -> void:
 	if container.has_node(str(peer_id)):
 		return
 	var player := PLAYER_SCENE.instantiate()

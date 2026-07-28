@@ -19,6 +19,7 @@ extends Control
 @onready var lobby_panel: Control = $LobbyPanel
 @onready var lobby_id_label: Label = $LobbyPanel/LobbyIDLabel
 @onready var player_list_container: VBoxContainer = $LobbyPanel/PlayerListContainer
+@onready var invite_button: Button = $LobbyPanel/InviteButton
 @onready var start_button: Button = $LobbyPanel/StartButton
 @onready var leave_button: Button = $LobbyPanel/LeaveButton
 
@@ -27,6 +28,7 @@ extends Control
 func _ready() -> void:
 	host_button.pressed.connect(_on_host_pressed)
 	join_button.pressed.connect(_on_join_pressed)
+	invite_button.pressed.connect(_on_invite_pressed)
 	start_button.pressed.connect(_on_start_pressed)
 	leave_button.pressed.connect(_on_leave_pressed)
 
@@ -71,6 +73,9 @@ func _refresh_player_list() -> void:
 
 func _on_start_pressed() -> void:
 	NetworkManager.start_game()
+
+func _on_invite_pressed() -> void:
+	NetworkManager.invite_friends()
 
 func _on_leave_pressed() -> void:
 	NetworkManager.leave_lobby()
