@@ -80,9 +80,6 @@ func _on_lobby_joined(lobby: int, _perm: int, _locked: bool, response: int) -> v
 	# NOTE: Do NOT emit lobby_joined here for clients yet if you want to ensure 
 	# P2P setup is fully ready; wait for _on_connected_to_server.
 
-func _on_connected_to_server() -> void:
-	# Client P2P handshake complete!
-	lobby_joined.emit(lobby_id)
 
 func _on_join_requested(lobby: int, _friend_id: int) -> void:
 	join_lobby(lobby)
@@ -153,8 +150,8 @@ func _change_scene(scene_path: String) -> void:
 # ---------- Connection lifecycle (networking only, no spawn logic) ----------
 
 func _on_connected_to_server() -> void:
-	# Client successfully connected to the host.
-	pass
+	# Client P2P handshake complete!
+	lobby_joined.emit(lobby_id)
 
 func _on_connection_failed() -> void:
 	push_error("Connection to host failed.")
