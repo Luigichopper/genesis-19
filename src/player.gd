@@ -2,6 +2,16 @@ extends CharacterBody3D
 # Attach to the root CharacterBody3D of player.tscn.
 # Node also needs a MultiplayerSynchronizer child (see notes below).
 
+# Set by NetworkManager.spawn_player() right after instantiate(), BEFORE
+# add_child(). Authority must be set here in _enter_tree() rather than
+# externally after instantiation — doing it from outside (even right before
+# add_child) races against MultiplayerSpawner's replication setup and
+# throws "unable to process the pending spawn since it has no network ID."
+var peer_id: int = 1
+
+func _enter_tree() -> void:
+	set_multiplayer_authority(peer_id)
+
 const SPEED := 6.0
 const JUMP_VELOCITY := 4.5
 const MOUSE_SENSITIVITY := 0.003

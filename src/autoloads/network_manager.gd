@@ -14,7 +14,6 @@ const GAME_SCENE := "res://src/main.tscn"
 
 var lobby_id: int = 0
 var players: Dictionary = {} # steam_id -> { "name": String }
-var in_game: bool = false
 
 func _ready() -> void:
 	Steam.lobby_created.connect(_on_lobby_created)
@@ -23,11 +22,11 @@ func _ready() -> void:
 	Steam.lobby_chat_update.connect(_on_lobby_chat_update)
 	Steam.join_requested.connect(_on_join_requested)
 
-	multiplayer.peer_connected.connect(_on_peer_connected)
-	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.connection_failed.connect(_on_connection_failed)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	multiplayer.peer_connected.connect(_on_peer_connected)
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 # ---------- Hosting ----------
 
@@ -119,10 +118,13 @@ func leave_lobby() -> void:
 	if multiplayer.multiplayer_peer:
 		multiplayer.multiplayer_peer.close()
 	lobby_id = 0
-	in_game = false
 	players.clear()
 
 func invite_friends() -> void:
+	# Opens Steam's built-in overlay invite picker for the current lobby.
+	# Steam handles the friend list UI, sending the invite, and (on their
+	# end) triggering join_requested if they accept — nothing further
+	# needed here for the happy path.
 	if lobby_id == 0:
 		push_warning("Can't invite: not in a lobby yet.")
 		return
@@ -139,24 +141,10 @@ func start_game() -> void:
 
 @rpc("authority", "call_local", "reliable")
 func _change_scene(scene_path: String) -> void:
-	in_game = true
 	game_starting.emit()
 	get_tree().change_scene_to_file(scene_path)
 
-# ---------- Multiplayer signals ----------
-
-func _on_peer_connected(id: int) -> void:
-	# During the lobby phase, peers connecting shouldn't try to spawn into
-	# a PlayerContainer that doesn't exist yet — spawn_existing_players()
-	# (called from the game scene's own _ready()) handles the initial spawn.
-	# This only matters for players who join AFTER the game has already
-	# started (late joiners), if you support that.
-	player_list_changed.emit()
-
-func _on_peer_disconnected(id: int) -> void:
-	if multiplayer.is_server():
-		_despawn_player(id)
-	player_list_changed.emit()
+# ---------- Connection lifecycle (networking only, no spawn logic) ----------
 
 func _on_connected_to_server() -> void:
 	# Client successfully connected to the host.
@@ -167,33 +155,42 @@ func _on_connection_failed() -> void:
 
 func _on_server_disconnected() -> void:
 	push_warning("Host disconnected.")
-	get_tree().change_scene_to_file("res://src/lobby_ui.tscn")
+	get_tree().change_scene_to_file("res://ui/main_menu.tscn")
+
+func _on_peer_connected(_id: int) -> void:
+	# Purely informational (e.g. for a HUD player list) — spawning is
+	# main.gd's responsibility, not this file's. See spawn_player() below.
+	player_list_changed.emit()
+
+func _on_peer_disconnected(_id: int) -> void:
+	player_list_changed.emit()
 
 # ---------- Player spawning ----------
 # The host owns spawning; MultiplayerSpawner replicates the node creation
-# to clients automatically as long as it's watching PlayerContainer's path.
+# to clients automatically as long as it's watching the container's path.
+# main.gd is responsible for CALLING these at the right times, and for
+# providing the container node — this file only knows how to spawn given
+# a container, not where that container lives.
 
-func spawn_existing_players(container: Node3D) -> void:
-	# Call this from the game scene's own _ready() (host only does anything;
-	# clients just wait for the spawner to replicate what the host creates).
-	# Handles the host's own player, which peer_connected never covers,
-	# plus anyone who was already connected before this scene loaded.
+func spawn_existing_players(container: Node) -> void:
+	# Call once from the game scene's own _ready() — spawns the host's own
+	# player (peer_connected never covers that) plus anyone already
+	# connected before this scene loaded. No-op on clients.
 	if not multiplayer.is_server():
 		return
-	_spawn_player(1, container) # the host itself
+	spawn_player(1, container) # the host itself
 	for peer_id in multiplayer.get_peers():
-		_spawn_player(peer_id, container)
+		spawn_player(peer_id, container)
 
-func _spawn_player(peer_id: int, container: Node3D) -> void:
+func spawn_player(peer_id: int, container: Node) -> void:
 	if container.has_node(str(peer_id)):
 		return
 	var player := PLAYER_SCENE.instantiate()
 	player.name = str(peer_id)
-	player.set_multiplayer_authority(peer_id)
+	player.peer_id = peer_id # player.gd sets its own authority from this in _enter_tree()
 	container.add_child(player, true)
 
-func _despawn_player(peer_id: int) -> void:
-	var container := get_tree().current_scene.get_node("PlayerContainer")
+func despawn_player(peer_id: int, container: Node) -> void:
 	if container.has_node(str(peer_id)):
 		container.get_node(str(peer_id)).queue_free()
 
