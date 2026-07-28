@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://bhjsvi2273i6r"]
+
+[ext_resource type="Script" uid="uid://cymbeo40ldq7k" path="res://src/ui/main_menu_ui.gd" id="1_juvyg"]
+[ext_resource type="PackedScene" uid="uid://c8d2k8m4y3q2x" path="res://src/ui/settings_ui.tscn" id="2_e0phe"]
+
+[node name="MainMenuUI" type="Control" unique_id=1004313102]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_juvyg")
+
+[node name="GameTitleLabel" type="Label" parent="." unique_id=476881044]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 64
+text = "Game Title"
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1760590893]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -196.0
+offset_top = -219.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ButtonContainer" type="VBoxContainer" parent="MarginContainer" unique_id=498813247]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="StartGameButton" type="Button" parent="MarginContainer/ButtonContainer" unique_id=1186173386]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Start Game"
+
+[node name="SettingsButton" type="Button" parent="MarginContainer/ButtonContainer" unique_id=966348108]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Settings"
+
+[node name="ExitGameButton" type="Button" parent="MarginContainer/ButtonContainer" unique_id=1634252218]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Exit Game"
+
+[node name="SettingsUI" parent="." unique_id=589040503 instance=ExtResource("2_e0phe")]
+visible = false
+layout_mode = 1

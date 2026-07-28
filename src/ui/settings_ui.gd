@@ -1,4 +1,4 @@
-# res://src/settings_ui.gd
+# res://src/ui/settings_ui.gd
 extends Control
 
 @onready var master_slider: HSlider = $PanelContainer/VBoxContainer/TabContainer/AudioTab/MasterSlider

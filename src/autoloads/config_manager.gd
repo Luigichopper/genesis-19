@@ -59,6 +59,7 @@ func save_settings() -> void:
 		config.set_value("Voice", key, voice_settings[key])
 		
 	config.save(SAVE_PATH)
+	print("Settings saved")
 
 func load_settings() -> void:
 	var config := ConfigFile.new()
@@ -76,3 +77,4 @@ func load_settings() -> void:
 		
 	apply_all_audio_settings()
 	apply_device_settings()
+	print("Settings loaded")

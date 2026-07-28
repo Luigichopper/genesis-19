@@ -28,6 +28,9 @@ func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
+func _process(delta: float) -> void:
+	Steam.run_callbacks()
+
 # ---------- Hosting ----------
 
 func host_game() -> void:
@@ -158,7 +161,7 @@ func _on_connection_failed() -> void:
 
 func _on_server_disconnected() -> void:
 	push_warning("Host disconnected.")
-	get_tree().change_scene_to_file("res://src/lobby_ui.tscn")
+	get_tree().change_scene_to_file("res://src/ui/lobby_ui.tscn")
 
 func _on_peer_connected(_id: int) -> void:
 	# Purely informational (e.g. for a HUD player list) — spawning is

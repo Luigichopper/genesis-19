@@ -1,3 +1,4 @@
+# res://src/ui/lobby_ui.gd
 extends Control
 # Attach to the root Control of lobby_ui.tscn.
 # Expected child nodes (see scene tree notes):
