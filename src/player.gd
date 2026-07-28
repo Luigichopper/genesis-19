@@ -10,7 +10,12 @@ extends CharacterBody3D
 var peer_id: int = 1
 
 func _enter_tree() -> void:
+	# 1. Set authority on the character body itself
 	set_multiplayer_authority(peer_id)
+	
+	# 2. ALSO explicitly set authority on the synchronizer before it enters the tree completely
+	if has_node("MultiplayerSynchronizer"):
+		$MultiplayerSynchronizer.set_multiplayer_authority(peer_id)
 
 const SPEED := 6.0
 const JUMP_VELOCITY := 4.5
@@ -18,6 +23,7 @@ const MOUSE_SENSITIVITY := 0.003
 
 @onready var camera: Camera3D = $Camera3D
 @onready var mesh: MeshInstance3D = $MeshInstance3D
+@onready var synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 

@@ -58,6 +58,7 @@ func _on_lobby_created(connect_result: int, lobby: int) -> void:
 func join_lobby(target_lobby_id: int) -> void:
 	Steam.joinLobby(target_lobby_id)
 
+# NetworkManager.gd
 func _on_lobby_joined(lobby: int, _perm: int, _locked: bool, response: int) -> void:
 	if response != Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
 		push_error("Failed to join lobby: %s" % response)
@@ -66,9 +67,8 @@ func _on_lobby_joined(lobby: int, _perm: int, _locked: bool, response: int) -> v
 	lobby_id = lobby
 	var host_steam_id := Steam.getLobbyOwner(lobby_id)
 
-	# If we ARE the owner (we just hosted), don't create a client peer too.
 	if host_steam_id == Steam.getSteamID():
-		return
+		return # Host path handled in _on_lobby_created
 
 	var peer := SteamMultiplayerPeer.new()
 	var client_result := peer.create_client(host_steam_id, 0)
@@ -77,6 +77,12 @@ func _on_lobby_joined(lobby: int, _perm: int, _locked: bool, response: int) -> v
 		return
 
 	multiplayer.multiplayer_peer = peer
+	# NOTE: Do NOT emit lobby_joined here for clients yet if you want to ensure 
+	# P2P setup is fully ready; wait for _on_connected_to_server.
+
+func _on_connected_to_server() -> void:
+	# Client P2P handshake complete!
+	lobby_joined.emit(lobby_id)
 
 func _on_join_requested(lobby: int, _friend_id: int) -> void:
 	join_lobby(lobby)
@@ -155,7 +161,7 @@ func _on_connection_failed() -> void:
 
 func _on_server_disconnected() -> void:
 	push_warning("Host disconnected.")
-	get_tree().change_scene_to_file("res://ui/main_menu.tscn")
+	get_tree().change_scene_to_file("res://src/lobby_ui.tscn")
 
 func _on_peer_connected(_id: int) -> void:
 	# Purely informational (e.g. for a HUD player list) — spawning is
