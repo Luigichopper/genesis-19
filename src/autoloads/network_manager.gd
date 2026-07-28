@@ -189,8 +189,14 @@ func spawn_player(peer_id: int, container: Node) -> void:
 	if container.has_node(str(peer_id)):
 		return
 	var player := PLAYER_SCENE.instantiate()
+	
+	# 1. ALWAYS set peer_id FIRST
+	player.peer_id = peer_id
+	
+	# 2. Set node name
 	player.name = str(peer_id)
-	player.peer_id = peer_id # player.gd sets its own authority from this in _enter_tree()
+	
+	# 3. Add to tree
 	container.add_child(player, true)
 
 func despawn_player(peer_id: int, container: Node) -> void:

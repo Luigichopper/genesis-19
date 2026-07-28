@@ -3,10 +3,6 @@
 [ext_resource type="Script" uid="uid://ctjskahdcayvm" path="res://src/player.gd" id="1_lowyb"]
 [ext_resource type="Script" uid="uid://ba4ulsdv4t86q" path="res://src/voice_chat.gd" id="2_gmfve"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tihks"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_ihbif"]
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sh265"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -15,8 +11,15 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tihks"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ihbif"]
+
 [node name="Player" type="CharacterBody3D" unique_id=140702344]
 script = ExtResource("1_lowyb")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1783836617]
+replication_config = SubResource("SceneReplicationConfig_sh265")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1894758636]
 shape = SubResource("CapsuleShape3D_tihks")
@@ -26,9 +29,6 @@ mesh = SubResource("CapsuleMesh_ihbif")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1999194903]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -0.2)
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1783836617]
-replication_config = SubResource("SceneReplicationConfig_sh265")
 
 [node name="VoiceChat" type="Node3D" parent="." unique_id=355122346]
 script = ExtResource("2_gmfve")
