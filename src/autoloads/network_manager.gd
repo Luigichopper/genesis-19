@@ -176,27 +176,19 @@ func _on_peer_disconnected(_id: int) -> void:
 # a container, not where that container lives.
 
 func spawn_existing_players(container: Node) -> void:
-	# Call once from the game scene's own _ready() — spawns the host's own
-	# player (peer_connected never covers that) plus anyone already
-	# connected before this scene loaded. No-op on clients.
 	if not multiplayer.is_server():
 		return
-	spawn_player(1, container) # the host itself
+	spawn_player(1, container) # host
 	for peer_id in multiplayer.get_peers():
 		spawn_player(peer_id, container)
 
 func spawn_player(peer_id: int, container: Node) -> void:
 	if container.has_node(str(peer_id)):
 		return
+	
 	var player := PLAYER_SCENE.instantiate()
-	
-	# 1. ALWAYS set peer_id FIRST
-	player.peer_id = peer_id
-	
-	# 2. Set node name
+	# Set the name BEFORE add_child so the spawner uses this string across the network
 	player.name = str(peer_id)
-	
-	# 3. Add to tree
 	container.add_child(player, true)
 
 func despawn_player(peer_id: int, container: Node) -> void:

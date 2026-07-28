@@ -35,7 +35,6 @@ func _ready() -> void:
 		set_process(false)
 
 func _process(delta: float) -> void:
-	print(_is_transmitting)
 	if not is_multiplayer_authority():
 		return
 	_handle_local_capture(delta)

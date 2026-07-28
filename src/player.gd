@@ -7,15 +7,15 @@ extends CharacterBody3D
 # externally after instantiation — doing it from outside (even right before
 # add_child) races against MultiplayerSpawner's replication setup and
 # throws "unable to process the pending spawn since it has no network ID."
-var peer_id: int = 1
-
 func _enter_tree() -> void:
-	# 1. Set authority on the character body itself
-	set_multiplayer_authority(peer_id)
+	# Parse the peer ID directly from the node name ("1", "1169861027", etc.)
+	var authority_id := name.to_int()
 	
-	# 2. ALSO explicitly set authority on the synchronizer before it enters the tree completely
-	if has_node("MultiplayerSynchronizer"):
-		$MultiplayerSynchronizer.set_multiplayer_authority(peer_id)
+	# Fallback safety in case the node hasn't been renamed yet
+	if authority_id != 0:
+		set_multiplayer_authority(authority_id)
+		if has_node("MultiplayerSynchronizer"):
+			$MultiplayerSynchronizer.set_multiplayer_authority(authority_id)
 
 const SPEED := 6.0
 const JUMP_VELOCITY := 4.5
