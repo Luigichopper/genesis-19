@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://bhjsvi2273i6r"]
+
+[ext_resource type="Script" uid="uid://cymbeo40ldq7k" path="res://src/ui/main_menu_ui.gd" id="1_juvyg"]
+[ext_resource type="Texture2D" uid="uid://di61fygh3le2y" path="res://assets/panorama_image.png" id="2_3sgvt"]
+[ext_resource type="Shader" uid="uid://cg7yqk1rujnle" path="res://src/ui/main_menu_space.gdshader" id="2_35mid"]
+[ext_resource type="PackedScene" uid="uid://c8d2k8m4y3q2x" path="res://src/ui/settings_ui.tscn" id="2_e0phe"]
+[ext_resource type="Script" uid="uid://dm1fx81cughel" path="res://src/ui/camera_3d.gd" id="3_2c6lc"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r07qs"]
+shader = ExtResource("2_35mid")
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 12
+shader_parameter/dither_size = 1
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ihbif"]
+panorama = ExtResource("2_3sgvt")
+filter = false
+
+[sub_resource type="Sky" id="Sky_ihbif"]
+sky_material = SubResource("PanoramaSkyMaterial_ihbif")
+
+[sub_resource type="Environment" id="Environment_tihks"]
+background_mode = 2
+sky = SubResource("Sky_ihbif")
+glow_levels/1 = 2.41
+glow_intensity = 1.76
+glow_blend_mode = 2
+
+[node name="MainMenuUI" type="Control" unique_id=1004313102]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_juvyg")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1221571843]
+material = SubResource("ShaderMaterial_r07qs")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=390452873]
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="Space3DScene" type="Node3D" parent="SubViewportContainer/SubViewport" unique_id=209557535]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport/Space3DScene" unique_id=2084821649]
+environment = SubResource("Environment_tihks")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Space3DScene" unique_id=883202457]
+transform = Transform3D(0.9945219, -0.104528464, 0, 0.104528464, 0.9945219, 0, 0, 0, 1, 0, 0, 0)
+projection = 1
+script = ExtResource("3_2c6lc")
+
+[node name="UIOverlay" type="CanvasLayer" parent="." unique_id=501457380]
+
+[node name="GameTitleLabel" type="Label" parent="UIOverlay" unique_id=476881044]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -333.0
+offset_top = -44.0
+offset_bottom = 44.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 64
+text = "Game Title"
+
+[node name="MarginContainer" type="MarginContainer" parent="UIOverlay" unique_id=1760590893]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -198.0
+offset_top = -235.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ButtonContainer" type="VBoxContainer" parent="UIOverlay/MarginContainer" unique_id=498813247]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="StartGameButton" type="Button" parent="UIOverlay/MarginContainer/ButtonContainer" unique_id=1186173386]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Start Game"
+
+[node name="SettingsButton" type="Button" parent="UIOverlay/MarginContainer/ButtonContainer" unique_id=966348108]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Settings"
+
+[node name="ExitGameButton" type="Button" parent="UIOverlay/MarginContainer/ButtonContainer" unique_id=1634252218]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Exit Game"
+
+[node name="SettingsUI" parent="UIOverlay" unique_id=589040503 instance=ExtResource("2_e0phe")]
+visible = false

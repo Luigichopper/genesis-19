@@ -1,13 +1,64 @@
 [gd_scene format=3 uid="uid://bektf71u3l11t"]
 
 [ext_resource type="Script" uid="uid://cktlcnflbkyfw" path="res://src/main.gd" id="1_eewff"]
+[ext_resource type="Texture2D" uid="uid://di61fygh3le2y" path="res://assets/panorama_image.png" id="2_5q4o7"]
+[ext_resource type="Texture2D" uid="uid://brj38bqbqrpcc" path="res://assets/floor.png" id="2_gh0ne"]
+[ext_resource type="Shader" uid="uid://dfmo2yv102t04" path="res://src/main.gdshader" id="4_3cfgd"]
+[ext_resource type="Texture2D" uid="uid://cgkf6t0ryxe07" path="res://assets/floor_normalmap.png" id="4_fyndt"]
+[ext_resource type="Texture2D" uid="uid://bw8ojyq762gl8" path="res://assets/wall.png" id="6_rlaii"]
+[ext_resource type="Texture2D" uid="uid://b1b1knx72lk0a" path="res://assets/wall_normal.png" id="7_5mrjc"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_3cfgd"]
+panorama = ExtResource("2_5q4o7")
+filter = false
+
+[sub_resource type="Sky" id="Sky_ihbif"]
+sky_material = SubResource("PanoramaSkyMaterial_3cfgd")
+
+[sub_resource type="Environment" id="Environment_fyndt"]
+background_mode = 2
+sky = SubResource("Sky_ihbif")
+ambient_light_source = 3
+tonemap_mode = 3
+glow_levels/1 = 2.41
+fog_mode = 1
+fog_light_color = Color(0, 0, 0, 1)
+fog_density = 1.0
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_tihks"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ihbif"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3cfgd"]
+albedo_texture = ExtResource("2_gh0ne")
+normal_enabled = true
+normal_texture = ExtResource("4_fyndt")
+texture_filter = 0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bktlc"]
+render_priority = 0
+shader = ExtResource("4_3cfgd")
+shader_parameter/affine_mapping = false
+shader_parameter/alpha_scissor = 0.5
+shader_parameter/jitter = 0.25
+shader_parameter/resolution = Vector2i(320, 240)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_tihks"]
+material = SubResource("ShaderMaterial_bktlc")
+size = Vector2(3, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kf8lf"]
+albedo_texture = ExtResource("6_rlaii")
+metallic = 0.32
+normal_enabled = true
+normal_texture = ExtResource("7_5mrjc")
+texture_filter = 0
+
 [node name="Main" type="Node3D" unique_id=300232661]
 script = ExtResource("1_eewff")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=186349075]
+environment = SubResource("Environment_fyndt")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=2064439167]
 _spawnable_scenes = PackedStringArray("uid://bgbq8ui50vhe8")
@@ -15,9 +66,207 @@ spawn_path = NodePath("../PlayerContainer")
 spawn_limit = 4
 
 [node name="PlayerContainer" type="Node3D" parent="." unique_id=661282253]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1773821615]
 physics_material_override = SubResource("PhysicsMaterial_tihks")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1997472665]
 shape = SubResource("WorldBoundaryShape3D_ihbif")
+
+[node name="Node" type="Node3D" parent="StaticBody3D" unique_id=1331044989]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Node" unique_id=1746110393]
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="StaticBody3D/Node" unique_id=182502186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="StaticBody3D/Node" unique_id=1934394703]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="StaticBody3D/Node" unique_id=1968979560]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticBody3D/Node" unique_id=1267189412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 3, -1.5)
+light_energy = 0.7
+shadow_enabled = true
+shadow_blur = 0.0
+omni_range = 6.0
+
+[node name="Node2" type="Node3D" parent="StaticBody3D" unique_id=894320744]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Node2" unique_id=494732042]
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="StaticBody3D/Node2" unique_id=102035795]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="StaticBody3D/Node2" unique_id=3567093]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="StaticBody3D/Node2" unique_id=385578888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="Node3" type="Node3D" parent="StaticBody3D" unique_id=1197220342]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Node3" unique_id=1717293258]
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="StaticBody3D/Node3" unique_id=1081099572]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="StaticBody3D/Node3" unique_id=319979062]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="StaticBody3D/Node3" unique_id=307544889]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+material_override = SubResource("StandardMaterial3D_3cfgd")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="Node3D" type="Node3D" parent="StaticBody3D" unique_id=1999335311]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=2128045888]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, 6)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=2032127570]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, 3)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=1719623722]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, 0)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=241646937]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, -3)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=1210861222]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, -6)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=1433621495]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, -9)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=2085687077]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, 6)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=1552948676]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, 3)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=137649185]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, 0)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=286284392]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, -3)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=928242699]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, -6)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="StaticBody3D/Node3D" unique_id=561762736]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, -9)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="Node3D2" type="Node3D" parent="StaticBody3D" unique_id=1375971375]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3, 0, -3)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=978008054]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, 6)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=1616388659]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, 3)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=1889193653]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, 0)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=786344993]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, -3)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=657273463]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, -6)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=1511731210]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 1.5, -9)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=208669072]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, 6)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=1437345915]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, 3)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=1514020393]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, 0)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=1007875079]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, -3)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=1103068128]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, -6)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")
+
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="StaticBody3D/Node3D2" unique_id=922795022]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 4.5, 4.5, -9)
+material_override = SubResource("StandardMaterial3D_kf8lf")
+mesh = SubResource("PlaneMesh_tihks")

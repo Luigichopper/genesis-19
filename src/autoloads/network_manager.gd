@@ -10,7 +10,7 @@ signal game_starting
 
 const MAX_PLAYERS := 4
 const PLAYER_SCENE := preload("res://src/player.tscn")
-const GAME_SCENE := "res://src/main.tscn"
+const GAME_SCENE := "res://src/root.tscn"
 
 var lobby_id: int = 0
 var players: Dictionary = {} # steam_id -> { "name": String }
@@ -27,6 +27,9 @@ func _ready() -> void:
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+
+func _process(delta: float) -> void:
+	Steam.run_callbacks()
 
 # ---------- Hosting ----------
 
@@ -158,7 +161,7 @@ func _on_connection_failed() -> void:
 
 func _on_server_disconnected() -> void:
 	push_warning("Host disconnected.")
-	get_tree().change_scene_to_file("res://src/lobby_ui.tscn")
+	get_tree().change_scene_to_file("res://src/ui/lobby_ui.tscn")
 
 func _on_peer_connected(_id: int) -> void:
 	# Purely informational (e.g. for a HUD player list) — spawning is
