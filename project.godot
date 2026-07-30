@@ -24,6 +24,10 @@ NetworkManager="*uid://c2336iil3epny"
 
 file_logging/enable_file_logging=true
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [input]
 
 move_left={

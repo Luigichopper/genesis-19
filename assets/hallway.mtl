@@ -1,0 +1,6 @@
+# Made in Blockbench 5.1.5
+newmtl m_94bd9f37-fa4f-031f-16be-0ff6dabb4dea
+map_Kd floor.png
+newmtl m_8ab75a3c-7bb3-a124-c410-40fc2283dac2
+map_Kd wall.png
+newmtl none
