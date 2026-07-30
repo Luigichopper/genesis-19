@@ -1,10 +1,10 @@
 extends Control
 
-@onready var start_game_button : Button = $MarginContainer/ButtonContainer/StartGameButton
-@onready var settings_button : Button = $MarginContainer/ButtonContainer/SettingsButton
-@onready var exit_game_button : Button = $MarginContainer/ButtonContainer/ExitGameButton
+@onready var start_game_button : Button = $UIOverlay/MarginContainer/ButtonContainer/StartGameButton
+@onready var settings_button : Button = $UIOverlay/MarginContainer/ButtonContainer/SettingsButton
+@onready var exit_game_button : Button = $UIOverlay/MarginContainer/ButtonContainer/ExitGameButton
 
-@onready var settings_ui : Control = $SettingsUI
+@onready var settings_ui : Control = $UIOverlay/SettingsUI
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

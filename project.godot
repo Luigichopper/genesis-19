@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Genesis-19"
-run/main_scene="uid://bektf71u3l11t"
+run/main_scene="uid://bhjsvi2273i6r"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -23,10 +23,6 @@ NetworkManager="*uid://c2336iil3epny"
 [debug]
 
 file_logging/enable_file_logging=true
-
-[display]
-
-window/stretch/mode="canvas_items"
 
 [input]
 
@@ -67,6 +63,7 @@ push_to_talk={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 
 [steam]
