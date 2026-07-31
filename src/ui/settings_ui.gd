@@ -15,6 +15,7 @@ extends Control
 @onready var ca_button: CheckButton = $PanelContainer/VBoxContainer/TabContainer/VisualsTab/ChromaticAberrationButton
 @onready var pixel_filter_button: CheckButton = $PanelContainer/VBoxContainer/TabContainer/VisualsTab/PixelFilterButton
 @onready var scanlines_button: CheckButton = $PanelContainer/VBoxContainer/TabContainer/VisualsTab/ScanlinesButton
+@onready var brightness_slider: HSlider = $PanelContainer/VBoxContainer/TabContainer/VisualsTab/BrightnessSlider
 
 @onready var keybinds_container: VBoxContainer = $PanelContainer/VBoxContainer/TabContainer/KeybindsTab/KeybindsContainer
 
@@ -59,7 +60,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				
 				currently_rebinding_action = ""
 				currently_rebinding_button = null
-				get_viewport().set_input_as_handled()
+				if is_inside_tree():
+					get_viewport().set_input_as_handled()
+
 
 func _on_visibility_changed() -> void:
 	if visible:
@@ -186,6 +189,16 @@ func _populate_visual_settings() -> void:
 		ConfigManager.apply_visual_settings()
 		_mark_unsaved()
 	)
+	
+	# Brightness
+	brightness_slider.value = ConfigManager.visual_settings.get("brightness", 1.0)
+	for c in brightness_slider.value_changed.get_connections():
+		brightness_slider.value_changed.disconnect(c.callable)
+	brightness_slider.value_changed.connect(func(toggled: float) -> void:
+		ConfigManager.visual_settings["brightness"] = toggled
+		ConfigManager.apply_visual_settings()
+		_mark_unsaved()
+	)
 
 func _on_input_device_selected(index: int) -> void:
 	var dev_name: String = input_device_option_button.get_item_text(index)
@@ -208,6 +221,7 @@ func _populate_keybind_settings() -> void:
 		child.queue_free()
 
 	var action_labels: Dictionary = {
+		"pause_game": "Pause Menu / Escape",
 		"move_forward": "Move Forward",
 		"move_back": "Move Back",
 		"move_left": "Move Left",
@@ -216,12 +230,15 @@ func _populate_keybind_settings() -> void:
 		"sprint": "Sprint",
 		"crouch": "Crouch",
 		"flashlight": "Flashlight",
-		"interact": "Interact",
+		"interact": "Interact / Pick Up",
+		"drop_item": "Drop Item",
 		"primary_attack": "Primary Attack",
 		"secondary_attack": "Secondary Attack",
 		"reload": "Reload",
 		"push_to_talk": "Push To Talk"
 	}
+
+
 
 	for action in ConfigManager.REBINDABLE_ACTIONS:
 		var row := HBoxContainer.new()

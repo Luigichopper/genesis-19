@@ -139,13 +139,14 @@ func _on_active_slot_changed(_idx: int, _item: ItemData) -> void:
 	_on_inventory_updated()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not is_multiplayer_authority():
+	if not is_multiplayer_authority() or get_tree().paused:
 		return
 		
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * mouse_sensitivity)
 		camera.rotate_x(-event.relative.y * mouse_sensitivity)
 		camera.rotation.x = clamp(camera.rotation.x, -max_pitch, max_pitch)
+
 
 	if Input.is_action_just_pressed("flashlight"):
 		_toggle_flashlight.rpc()
@@ -168,12 +169,48 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif Input.is_action_just_pressed("slot_prev"):
 			inventory.set_active_slot(inventory.active_slot_index - 1)
 
+	if Input.is_action_just_pressed("drop_item"):
+		_handle_drop_item()
+
 	# Combat Inputs
 	if weapon_controller:
 		if Input.is_action_just_pressed("primary_attack"):
 			weapon_controller.handle_primary_attack()
 		elif Input.is_action_just_pressed("reload"):
 			weapon_controller.handle_reload()
+
+func _handle_drop_item() -> void:
+	if not inventory:
+		return
+
+	var slot := inventory.get_active_slot()
+	if not slot or not slot.item:
+		return
+
+	var item_to_drop := slot.item
+	var count_to_drop := slot.count
+	var ammo_to_drop := slot.current_ammo
+
+	# Clear from inventory
+	inventory.remove_active_item(count_to_drop)
+
+	# Spawn world pickup
+	var pickup_scene: PackedScene = load("res://src/items/item_pickup_3d.tscn")
+	if pickup_scene:
+		var pickup := pickup_scene.instantiate() as RigidBody3D
+		get_parent().add_child(pickup)
+		
+		# Position in front of camera
+		var drop_pos := camera.global_position + (-camera.global_transform.basis.z * 1.5)
+		pickup.global_position = drop_pos
+		
+		if pickup.has_method("setup"):
+			pickup.setup(item_to_drop, count_to_drop, ammo_to_drop)
+
+		# Apply outward drop impulse
+		var impulse := -camera.global_transform.basis.z * 3.0 + Vector3.UP * 1.5
+		pickup.apply_central_impulse(impulse)
+
 
 
 @rpc("call_local", "reliable", "any_peer")

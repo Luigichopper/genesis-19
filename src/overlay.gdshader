@@ -11,6 +11,8 @@ uniform float vignette_intensity : hint_range(0.0, 2.0) = 0.6;
 uniform float scanline_density : hint_range(100.0, 800.0) = 320.0;
 uniform float scanline_opacity : hint_range(0.0, 1.0) = 0.15;
 uniform float chromatic_aberration : hint_range(0.0, 10.0) = 1.8;
+uniform float brightness : hint_range(0.5, 2.0) = 1.0;
+
 
 vec2 distort_uv(vec2 uv) {
     // Zoom centered around (0.5, 0.5)
@@ -44,6 +46,8 @@ void fragment() {
         // Radial Vignette (darkening near visor edges)
         float uv_dist = distance(distorted_uv, vec2(0.5));
         color *= smoothstep(0.8, 0.8 - vignette_intensity, uv_dist);
+
+        color *= brightness;
 
         COLOR = vec4(color, 1.0);
     }

@@ -25,18 +25,19 @@ func update_hotbar(inventory: InventoryComponent) -> void:
 
 
 func _update_shader_parameters() -> void:
-	if not post_processing_overlay or not post_processing_overlay.material:
+	if not is_instance_valid(post_processing_overlay) or not post_processing_overlay.material:
 		return
-
 	var mat := post_processing_overlay.material as ShaderMaterial
 	if not mat:
 		return
-
 	var ca_enabled: bool = ConfigManager.visual_settings.get("chromatic_aberration", true)
 	var scanlines_enabled: bool = ConfigManager.visual_settings.get("scanlines", true)
-
+	var brightness: float = ConfigManager.visual_settings.get("brightness", 1.0)
+	
 	mat.set_shader_parameter("chromatic_aberration", 1.8 if ca_enabled else 0.0)
 	mat.set_shader_parameter("scanline_opacity", 0.15 if scanlines_enabled else 0.0)
+	mat.set_shader_parameter("brightness", brightness)
+
 
 
 func update_stamina(current_stamina: float, max_stamina: float, is_exhausted: bool = false) -> void:

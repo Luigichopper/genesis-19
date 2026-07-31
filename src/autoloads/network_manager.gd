@@ -121,10 +121,15 @@ func get_lobby_members() -> Array:
 func leave_lobby() -> void:
 	if lobby_id != 0:
 		Steam.leaveLobby(lobby_id)
+		lobby_id = 0
+
 	if multiplayer.multiplayer_peer:
 		multiplayer.multiplayer_peer.close()
-	lobby_id = 0
+		multiplayer.multiplayer_peer = null
+
 	players.clear()
+	player_list_changed.emit()
+
 
 func invite_friends() -> void:
 	# Opens Steam's built-in overlay invite picker for the current lobby.

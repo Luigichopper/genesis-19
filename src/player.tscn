@@ -4,9 +4,8 @@
 [ext_resource type="Shader" uid="uid://dfmo2yv102t04" path="res://src/main.gdshader" id="2_ehvfd"]
 [ext_resource type="Script" uid="uid://ba4ulsdv4t86q" path="res://src/voice_chat.gd" id="2_gmfve"]
 [ext_resource type="PackedScene" uid="uid://dsxcgki4beill" path="res://src/ui/hud_ui.tscn" id="3_hudsc"]
-[ext_resource type="Script" uid="uid://8149819284" path="res://src/inventory/inventory_component.gd" id="4_inv"]
-[ext_resource type="Script" uid="uid://192840192" path="res://src/weapon_controller.gd" id="5_wep"]
-
+[ext_resource type="Script" uid="uid://bbkvbmiia1xkj" path="res://src/inventory/inventory_component.gd" id="4_inv"]
+[ext_resource type="Script" uid="uid://b5y3fri605rri" path="res://src/weapon_controller.gd" id="5_wep"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sh265"]
 properties/0/path = NodePath(".:position")
@@ -77,7 +76,6 @@ omni_range = 4.0
 script = ExtResource("4_inv")
 
 [node name="CeilingCheck" type="RayCast3D" parent="." unique_id=1920482910]
-
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 target_position = Vector3(0, 1.2, 0)
 

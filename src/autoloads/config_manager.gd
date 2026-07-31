@@ -32,7 +32,8 @@ var visual_settings: Dictionary = {
 	"window_mode": WindowMode.WINDOWED,
 	"chromatic_aberration": true,
 	"pixel_filter": false, # false = Nearest (PSX low-res pixelated), true = Linear (Smooth)
-	"scanlines": true
+	"scanlines": true,
+	"brightness": 1.0
 }
 
 func _ready() -> void:
@@ -87,6 +88,7 @@ func apply_visual_settings() -> void:
 var keybind_settings: Dictionary = {}
 
 const REBINDABLE_ACTIONS: Array[String] = [
+	"pause_game",
 	"move_forward",
 	"move_back",
 	"move_left",
@@ -96,11 +98,14 @@ const REBINDABLE_ACTIONS: Array[String] = [
 	"crouch",
 	"flashlight",
 	"interact",
+	"drop_item",
 	"primary_attack",
 	"secondary_attack",
 	"reload",
 	"push_to_talk"
 ]
+
+
 
 func apply_keybind_settings() -> void:
 	for action in REBINDABLE_ACTIONS:
@@ -161,6 +166,4 @@ func load_settings() -> void:
 	apply_device_settings()
 	apply_visual_settings()
 	apply_keybind_settings()
-	print("Settings loaded")
-
-
+	print_debug("Settings loaded")

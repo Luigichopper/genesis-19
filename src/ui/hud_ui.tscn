@@ -2,17 +2,18 @@
 
 [ext_resource type="Shader" uid="uid://dg7myv2ogl8mp" path="res://src/overlay.gdshader" id="1_p6f0k"]
 [ext_resource type="Script" uid="uid://cathx8qxtj40v" path="res://src/ui/hud_ui.gd" id="2_hudsc"]
-[ext_resource type="PackedScene" uid="uid://c8k2m9v3x4y1z" path="res://src/ui/hotbar_ui.tscn" id="3_hotbar"]
-
+[ext_resource type="PackedScene" uid="uid://c8k2nav3x4y10" path="res://src/ui/hotbar_ui.tscn" id="3_hotbar"]
+[ext_resource type="PackedScene" uid="uid://d3m8y12k8qa11" path="res://src/ui/pause_menu_ui.tscn" id="4_pause"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tihks"]
 shader = ExtResource("1_p6f0k")
-shader_parameter/distortion_strength = 0.10000005224999997
+shader_parameter/distortion_strength = 0.10000005224999996
 shader_parameter/screen_zoom = 0.9000000189999999
 shader_parameter/vignette_intensity = 0.400000019
 shader_parameter/scanline_density = 320.0
 shader_parameter/scanline_opacity = 0.15
 shader_parameter/chromatic_aberration = 1.8
+shader_parameter/brightness = 1.0
 
 [node name="HUD" type="CanvasLayer" unique_id=375050047]
 script = ExtResource("2_hudsc")
@@ -42,7 +43,8 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "HEALTH [/////....]"
 
-[node name="HotbarUI" parent="UIContainer" instance=ExtResource("3_hotbar")]
+[node name="HotbarUI" parent="UIContainer" unique_id=56504148 instance=ExtResource("3_hotbar")]
+layout_mode = 1
 
 [node name="PostProcessingOverlay" type="ColorRect" parent="." unique_id=1366986978]
 material = SubResource("ShaderMaterial_tihks")
@@ -52,3 +54,5 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="PauseMenuUI" parent="." unique_id=1798520599 instance=ExtResource("4_pause")]

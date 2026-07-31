@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://d3m8y12k8qa11"]
+
+[ext_resource type="Script" uid="uid://ky24f0xnyu7j" path="res://src/ui/pause_menu_ui.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://c8d2k8m4y3q2x" path="res://src/ui/settings_ui.tscn" id="2_settings"]
+
+[node name="PauseMenuUI" type="Control" unique_id=1948201940]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="BackgroundDim" type="ColorRect" parent="." unique_id=184920195]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=192840192]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -180.0
+offset_right = 260.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=183920192]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="PanelContainer/VBoxContainer" unique_id=194829102]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="MainHBox" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=172839103]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 20
+
+[node name="LeftVBox" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MainHBox" unique_id=184920491]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PanelContainer/VBoxContainer/MainHBox/LeftVBox" unique_id=101]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Resume Game"
+
+[node name="SettingsButton" type="Button" parent="PanelContainer/VBoxContainer/MainHBox/LeftVBox" unique_id=102]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Settings"
+
+[node name="ExitMenuButton" type="Button" parent="PanelContainer/VBoxContainer/MainHBox/LeftVBox" unique_id=103]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Exit to Main Menu"
+
+[node name="ExitGameButton" type="Button" parent="PanelContainer/VBoxContainer/MainHBox/LeftVBox" unique_id=104]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Exit Game"
+
+[node name="RightVBox" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MainHBox" unique_id=194820195]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LobbyTitle" type="Label" parent="PanelContainer/VBoxContainer/MainHBox/RightVBox" unique_id=201]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "LOBBY OPERATIVES"
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/VBoxContainer/MainHBox/RightVBox" unique_id=202]
+layout_mode = 2
+
+[node name="PlayerListContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MainHBox/RightVBox" unique_id=203]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SettingsUI" parent="." unique_id=921563436 instance=ExtResource("2_settings")]
+visible = false
+layout_mode = 1
