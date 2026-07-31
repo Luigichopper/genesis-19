@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://dsxcgki4beill"]
+
+[ext_resource type="Shader" uid="uid://dg7myv2ogl8mp" path="res://src/overlay.gdshader" id="1_p6f0k"]
+[ext_resource type="Script" uid="uid://cathx8qxtj40v" path="res://src/ui/hud_ui.gd" id="2_hudsc"]
+[ext_resource type="PackedScene" uid="uid://c8k2m9v3x4y1z" path="res://src/ui/hotbar_ui.tscn" id="3_hotbar"]
+
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tihks"]
+shader = ExtResource("1_p6f0k")
+shader_parameter/distortion_strength = 0.10000005224999997
+shader_parameter/screen_zoom = 0.9000000189999999
+shader_parameter/vignette_intensity = 0.400000019
+shader_parameter/scanline_density = 320.0
+shader_parameter/scanline_opacity = 0.15
+shader_parameter/chromatic_aberration = 1.8
+
+[node name="HUD" type="CanvasLayer" unique_id=375050047]
+script = ExtResource("2_hudsc")
+
+[node name="UIContainer" type="Control" parent="." unique_id=1094840397]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UIContainer" unique_id=587190006]
+layout_mode = 1
+offset_right = 319.0
+offset_bottom = 104.0
+theme_override_constants/separation = 0
+
+[node name="StaminaLabel" type="Label" parent="UIContainer/VBoxContainer" unique_id=1318299903]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "STAMINA [/////////]"
+
+[node name="HealthLabel" type="Label" parent="UIContainer/VBoxContainer" unique_id=1782747636]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "HEALTH [/////....]"
+
+[node name="HotbarUI" parent="UIContainer" instance=ExtResource("3_hotbar")]
+
+[node name="PostProcessingOverlay" type="ColorRect" parent="." unique_id=1366986978]
+material = SubResource("ShaderMaterial_tihks")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

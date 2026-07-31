@@ -114,6 +114,41 @@ text = "Output Device"
 [node name="OutputDeviceOptionButton" type="OptionButton" parent="PanelContainer/VBoxContainer/TabContainer/VoiceTab" unique_id=549009124]
 layout_mode = 2
 
+[node name="VisualsTab" type="VBoxContainer" parent="PanelContainer/VBoxContainer/TabContainer" unique_id=194820194]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+metadata/_tab_index = 2
+
+[node name="WindowModeLabel" type="Label" parent="PanelContainer/VBoxContainer/TabContainer/VisualsTab" unique_id=1849204810]
+layout_mode = 2
+text = "Display Mode"
+
+[node name="WindowModeOptionButton" type="OptionButton" parent="PanelContainer/VBoxContainer/TabContainer/VisualsTab" unique_id=1928401928]
+layout_mode = 2
+
+[node name="ChromaticAberrationButton" type="CheckButton" parent="PanelContainer/VBoxContainer/TabContainer/VisualsTab" unique_id=1839201938]
+layout_mode = 2
+text = "Chromatic Aberration"
+
+[node name="PixelFilterButton" type="CheckButton" parent="PanelContainer/VBoxContainer/TabContainer/VisualsTab" unique_id=1948291039]
+layout_mode = 2
+text = "Smooth Texture Filter (Linear)"
+
+[node name="ScanlinesButton" type="CheckButton" parent="PanelContainer/VBoxContainer/TabContainer/VisualsTab" unique_id=1728391029]
+layout_mode = 2
+text = "CRT Scanlines"
+
+[node name="KeybindsTab" type="ScrollContainer" parent="PanelContainer/VBoxContainer/TabContainer" unique_id=1829401928]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="KeybindsContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/TabContainer/KeybindsTab" unique_id=1948204910]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
 [node name="ButtonContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=2086941955]
 layout_mode = 2
 alignment = 2

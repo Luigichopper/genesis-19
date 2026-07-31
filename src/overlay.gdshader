@@ -2,8 +2,9 @@ shader_type canvas_item;
 
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 
-// Visor Lens Curvature Settings
+// Visor Lens Curvature & Zoom Settings
 uniform float distortion_strength : hint_range(-1.0, 1.0) = 0.25;
+uniform float screen_zoom : hint_range(0.5, 1.5) = 0.88; // < 1.0 zooms outward so edge UI fits cleanly inside visor frame
 uniform float vignette_intensity : hint_range(0.0, 2.0) = 0.6;
 
 // Retro Effects
@@ -12,11 +13,14 @@ uniform float scanline_opacity : hint_range(0.0, 1.0) = 0.15;
 uniform float chromatic_aberration : hint_range(0.0, 10.0) = 1.8;
 
 vec2 distort_uv(vec2 uv) {
-    vec2 cc = uv - vec2(0.5);
+    // Zoom centered around (0.5, 0.5)
+    vec2 cc = (uv - vec2(0.5)) / screen_zoom;
     float dist = dot(cc, cc);
-    // Spherical bulge / barrel distortion
-    return uv + cc * (dist * distortion_strength);
+    // Outward space helmet / fisheye glass curvature
+    return vec2(0.5) + cc * (1.0 - dist * distortion_strength);
 }
+
+
 
 void fragment() {
     vec2 distorted_uv = distort_uv(SCREEN_UV);

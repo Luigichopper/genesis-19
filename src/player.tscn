@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://ctjskahdcayvm" path="res://src/player.gd" id="1_lowyb"]
 [ext_resource type="Shader" uid="uid://dfmo2yv102t04" path="res://src/main.gdshader" id="2_ehvfd"]
 [ext_resource type="Script" uid="uid://ba4ulsdv4t86q" path="res://src/voice_chat.gd" id="2_gmfve"]
+[ext_resource type="PackedScene" uid="uid://dsxcgki4beill" path="res://src/ui/hud_ui.tscn" id="3_hudsc"]
+[ext_resource type="Script" uid="uid://8149819284" path="res://src/inventory/inventory_component.gd" id="4_inv"]
+[ext_resource type="Script" uid="uid://192840192" path="res://src/weapon_controller.gd" id="5_wep"]
+
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sh265"]
 properties/0/path = NodePath(".:position")
@@ -27,6 +31,8 @@ material = SubResource("ShaderMaterial_3cfgd")
 
 [node name="Player" type="CharacterBody3D" unique_id=140702344]
 script = ExtResource("1_lowyb")
+stamina_recovery_percent = 0.5
+head_bob_frequency = 2.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1783836617]
 replication_config = SubResource("SceneReplicationConfig_sh265")
@@ -43,9 +49,42 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -0.2)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Camera3D" unique_id=1701494560]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, 0.2)
+light_energy = 2.0
+shadow_enabled = true
+spot_range = 18.0
+spot_angle = 35.0
+
+[node name="InteractRayCast" type="RayCast3D" parent="Camera3D" unique_id=1849204910]
+target_position = Vector3(0, 0, -2.5)
+
+[node name="WeaponController" type="Node3D" parent="Camera3D" unique_id=1948201928]
+script = ExtResource("5_wep")
+
+[node name="ViewmodelMesh" type="MeshInstance3D" parent="Camera3D/WeaponController" unique_id=182940192]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.25, -0.5)
+
+[node name="AttackRaycast" type="RayCast3D" parent="Camera3D/WeaponController" unique_id=1928401948]
+target_position = Vector3(0, 0, -2.5)
+
+[node name="MuzzleLight" type="OmniLight3D" parent="Camera3D/WeaponController" unique_id=182940195]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.2, -0.8)
+visible = false
+light_color = Color(1, 0.85, 0.3, 1)
+light_energy = 3.0
+omni_range = 4.0
+
+[node name="InventoryComponent" type="Node" parent="." unique_id=1829401928]
+script = ExtResource("4_inv")
+
+[node name="CeilingCheck" type="RayCast3D" parent="." unique_id=1920482910]
+
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+target_position = Vector3(0, 1.2, 0)
 
 [node name="VoiceChat" type="Node3D" parent="." unique_id=355122346]
 script = ExtResource("2_gmfve")
 
 [node name="VoicePlayer" type="AudioStreamPlayer3D" parent="VoiceChat" unique_id=1053419512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="HUD" parent="." unique_id=722855369 instance=ExtResource("3_hudsc")]

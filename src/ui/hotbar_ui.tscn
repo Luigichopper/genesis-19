@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://c8k2nav3x4y10"]
+
+[ext_resource type="Script" uid="uid://d3m8y12k8p9" path="res://src/ui/hotbar_ui.gd" id="1_script"]
+
+[node name="HotbarUI" type="Control" unique_id=1849204812]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -60.0
+offset_right = 160.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("1_script")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1948201948]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Slot1" type="PanelContainer" parent="HBoxContainer" unique_id=1001]
+custom_minimum_size = Vector2(72, 48)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Slot1" unique_id=2001]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "1: [EMPTY]"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Slot2" type="PanelContainer" parent="HBoxContainer" unique_id=1002]
+custom_minimum_size = Vector2(72, 48)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Slot2" unique_id=2002]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "2: [EMPTY]"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Slot3" type="PanelContainer" parent="HBoxContainer" unique_id=1003]
+custom_minimum_size = Vector2(72, 48)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Slot3" unique_id=2003]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "3: [EMPTY]"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Slot4" type="PanelContainer" parent="HBoxContainer" unique_id=1004]
+custom_minimum_size = Vector2(72, 48)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Slot4" unique_id=2004]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "4: [EMPTY]"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

@@ -1,7 +1,15 @@
 # res://src/config_manager.gd
 extends Node
 
+signal visual_settings_changed
+
 const SAVE_PATH := "user://settings.cfg"
+
+enum WindowMode {
+	WINDOWED,
+	FULLSCREEN,
+	EXCLUSIVE_FULLSCREEN
+}
 
 # Default audio bus volumes (0.0 to 1.0 linear)
 var audio_settings: Dictionary = {
@@ -17,6 +25,14 @@ var voice_settings: Dictionary = {
 	"push_to_talk": true,
 	"input_device": "Default",
 	"output_device": "Default"
+}
+
+# Visual / Graphics settings
+var visual_settings: Dictionary = {
+	"window_mode": WindowMode.WINDOWED,
+	"chromatic_aberration": true,
+	"pixel_filter": false, # false = Nearest (PSX low-res pixelated), true = Linear (Smooth)
+	"scanlines": true
 }
 
 func _ready() -> void:
@@ -47,6 +63,52 @@ func apply_device_settings() -> void:
 	if saved_output in output_devices:
 		AudioServer.output_device = saved_output
 
+func apply_visual_settings() -> void:
+	# 1. Window Mode
+	var mode: int = visual_settings.get("window_mode", WindowMode.WINDOWED)
+	match mode:
+		WindowMode.WINDOWED:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+		WindowMode.FULLSCREEN:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		WindowMode.EXCLUSIVE_FULLSCREEN:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+
+	# 2. Texture Filter (Pixel Filter Toggle)
+	var pixel_filter: bool = visual_settings.get("pixel_filter", false)
+	var filter_mode := Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR if pixel_filter else Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+	get_tree().root.canvas_item_default_texture_filter = filter_mode
+
+	# 3. Signal subscribers (e.g. HUD overlay shader) to refresh parameters
+	visual_settings_changed.emit()
+
+# Keybind settings (action_name -> InputEvent)
+var keybind_settings: Dictionary = {}
+
+const REBINDABLE_ACTIONS: Array[String] = [
+	"move_forward",
+	"move_back",
+	"move_left",
+	"move_right",
+	"jump",
+	"sprint",
+	"crouch",
+	"flashlight",
+	"interact",
+	"primary_attack",
+	"secondary_attack",
+	"reload",
+	"push_to_talk"
+]
+
+func apply_keybind_settings() -> void:
+	for action in REBINDABLE_ACTIONS:
+		if keybind_settings.has(action):
+			var event: InputEvent = keybind_settings[action]
+			InputMap.action_erase_events(action)
+			InputMap.action_add_event(action, event)
+
 # ---------- Save & Load Config ----------
 
 func save_settings() -> void:
@@ -58,7 +120,17 @@ func save_settings() -> void:
 	for key: String in voice_settings:
 		config.set_value("Voice", key, voice_settings[key])
 		
+	for key: String in visual_settings:
+		config.set_value("Visuals", key, visual_settings[key])
+
+	for action in REBINDABLE_ACTIONS:
+		var events := InputMap.action_get_events(action)
+		if events.size() > 0:
+			config.set_value("Keybinds", action, events[0])
+
 	config.save(SAVE_PATH)
+	apply_visual_settings()
+	apply_keybind_settings()
 	print("Settings saved")
 
 func load_settings() -> void:
@@ -67,6 +139,7 @@ func load_settings() -> void:
 	if err != OK:
 		apply_all_audio_settings()
 		apply_device_settings()
+		apply_visual_settings()
 		return
 
 	for bus: String in audio_settings:
@@ -75,6 +148,19 @@ func load_settings() -> void:
 	for key: String in voice_settings:
 		voice_settings[key] = config.get_value("Voice", key, voice_settings[key])
 		
+	for key: String in visual_settings:
+		visual_settings[key] = config.get_value("Visuals", key, visual_settings[key])
+
+	for action in REBINDABLE_ACTIONS:
+		if config.has_section_key("Keybinds", action):
+			var event: InputEvent = config.get_value("Keybinds", action)
+			if event:
+				keybind_settings[action] = event
+
 	apply_all_audio_settings()
 	apply_device_settings()
+	apply_visual_settings()
+	apply_keybind_settings()
 	print("Settings loaded")
+
+
