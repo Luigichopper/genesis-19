@@ -77,6 +77,9 @@ func _on_settings_pressed() -> void:
 func _on_exit_menu_pressed() -> void:
 	get_tree().paused = false
 	NetworkManager.leave_lobby()
+	call_deferred("_deferred_exit_to_menu")
+
+func _deferred_exit_to_menu() -> void:
 	get_tree().change_scene_to_file("res://src/ui/main_menu_ui.tscn")
 
 func _on_exit_game_pressed() -> void:

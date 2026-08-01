@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c8k2nav3x4y10"]
 
-[ext_resource type="Script" uid="uid://d3m8y12k8p9" path="res://src/ui/hotbar_ui.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://fr63t7fe28lx" path="res://src/ui/hotbar_ui.gd" id="1_script"]
 
 [node name="HotbarUI" type="Control" unique_id=1849204812]
 layout_mode = 3

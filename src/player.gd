@@ -61,6 +61,9 @@ var bob_time: float = 0.0
 var camera_start_y: float = 0.8
 var target_cam_y: float = 0.8
 
+# Preload Item Scene
+const ITEM_PICKUP_SCENE := preload("res://src/items/item_pickup_3d.tscn")
+
 # Network state variables
 @export var flashlight_enabled: bool = true:
 	set(val):
@@ -195,9 +198,8 @@ func _handle_drop_item() -> void:
 	inventory.remove_active_item(count_to_drop)
 
 	# Spawn world pickup
-	var pickup_scene: PackedScene = load("res://src/items/item_pickup_3d.tscn")
-	if pickup_scene:
-		var pickup := pickup_scene.instantiate() as RigidBody3D
+	if ITEM_PICKUP_SCENE:
+		var pickup = ITEM_PICKUP_SCENE.instantiate() as RigidBody3D
 		get_parent().add_child(pickup)
 		
 		# Position in front of camera
@@ -220,6 +222,8 @@ func _toggle_flashlight() -> void:
 		spot_light.visible = flashlight_enabled
 
 func _physics_process(delta: float) -> void:
+	if not multiplayer.has_multiplayer_peer():
+		return
 	if not is_multiplayer_authority():
 		return
 

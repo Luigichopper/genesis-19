@@ -1,16 +1,24 @@
 [gd_scene format=3 uid="uid://d3m8y12k8qa10"]
 
-[ext_resource type="Script" uid="uid://cx6i8k0a3w6q2" path="res://src/items/item_pickup_3d.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cdjcu7jecnw6e" path="res://src/items/item_pickup_3d.gd" id="1_script"]
+[ext_resource type="Shader" uid="uid://dfmo2yv102t04" path="res://src/main.gdshader" id="2_7vrd3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tihks"]
 size = Vector3(0.4, 0.4, 0.4)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ma3j6"]
+render_priority = 0
+shader = ExtResource("2_7vrd3")
+shader_parameter/affine_mapping = false
+shader_parameter/alpha_scissor = 0.5
+shader_parameter/jitter = 0.25
+shader_parameter/resolution = Vector2i(320, 240)
+
 [sub_resource type="BoxMesh" id="BoxMesh_ihbif"]
+material = SubResource("ShaderMaterial_ma3j6")
 size = Vector3(0.3, 0.3, 0.3)
 
 [node name="ItemPickup3D" type="RigidBody3D" unique_id=1948201928]
-collision_layer = 1
-collision_mask = 1
 script = ExtResource("1_script")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=184920194]
