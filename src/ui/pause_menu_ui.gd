@@ -80,5 +80,6 @@ func _on_exit_menu_pressed() -> void:
 	get_tree().change_scene_to_file("res://src/ui/main_menu_ui.tscn")
 
 func _on_exit_game_pressed() -> void:
+	get_tree().paused = true
 	NetworkManager.leave_lobby()
 	get_tree().quit()
