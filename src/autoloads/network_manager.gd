@@ -10,7 +10,7 @@ signal game_starting
 
 const MAX_PLAYERS := 4
 const PLAYER_SCENE := preload("res://src/player.tscn")
-const GAME_SCENE := "res://src/root.tscn"
+const GAME_SCENE := "res://src/main.tscn"
 
 var lobby_id: int = 0
 var players: Dictionary = {} # steam_id -> { "name": String }

@@ -1,6 +1,6 @@
 extends Node3D
 
-@onready var player_container: Node3D = $PlayerContainer
+@onready var player_container: Node3D = %PlayerContainer
 
 func _ready() -> void:
 	# Tell the host that THIS peer has finished loading main.tscn

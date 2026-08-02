@@ -45,11 +45,11 @@ func handle_primary_attack() -> void:
 	if attack_cooldown_timer > 0.0 or is_reloading:
 		return
 
-	var slot := inventory.get_active_slot() if inventory else null
+	var slot: InventoryComponent.InventorySlot = inventory.get_active_slot() if inventory else null
 	if not slot or not slot.item or not (slot.item is WeaponData):
 		return
 
-	var weapon := slot.item as WeaponData
+	var weapon: WeaponData = slot.item as WeaponData
 
 	if weapon.weapon_type == WeaponData.WeaponType.MELEE:
 		_execute_melee_attack(weapon)
@@ -57,11 +57,11 @@ func handle_primary_attack() -> void:
 		_execute_ranged_attack(slot, weapon)
 
 func handle_reload() -> void:
-	var slot := inventory.get_active_slot() if inventory else null
+	var slot: InventoryComponent.InventorySlot = inventory.get_active_slot() if inventory else null
 	if not slot or not slot.item or not (slot.item is WeaponData):
 		return
 
-	var weapon := slot.item as WeaponData
+	var weapon: WeaponData = slot.item as WeaponData
 	if weapon.weapon_type == WeaponData.WeaponType.RANGED:
 		if slot.current_ammo < weapon.max_ammo and not is_reloading:
 			is_reloading = true
@@ -69,9 +69,9 @@ func handle_reload() -> void:
 			print("Reloading %s..." % weapon.display_name)
 
 func _finish_reload() -> void:
-	var slot := inventory.get_active_slot() if inventory else null
+	var slot: InventoryComponent.InventorySlot = inventory.get_active_slot() if inventory else null
 	if slot and slot.item is WeaponData:
-		var weapon := slot.item as WeaponData
+		var weapon: WeaponData = slot.item as WeaponData
 		slot.current_ammo = weapon.max_ammo
 		if inventory:
 			inventory.inventory_updated.emit()
@@ -85,8 +85,8 @@ func _execute_melee_attack(weapon: WeaponData) -> void:
 	print("Melee Swing with %s" % weapon.display_name)
 
 	if attack_raycast.is_colliding():
-		var collider := attack_raycast.get_collider()
-		var point := attack_raycast.get_collision_point()
+		var collider: Object = attack_raycast.get_collider()
+		var point: Vector3 = attack_raycast.get_collision_point()
 		print("Melee hit: %s at %s" % [collider.name, point])
 		if collider.has_method("take_damage"):
 			collider.take_damage(weapon.damage, player)
@@ -109,8 +109,8 @@ func _execute_ranged_attack(slot: InventoryComponent.InventorySlot, weapon: Weap
 	print("Fired %s! Ammo left: %d" % [weapon.display_name, slot.current_ammo])
 
 	if attack_raycast.is_colliding():
-		var collider := attack_raycast.get_collider()
-		var point := attack_raycast.get_collision_point()
+		var collider: Object = attack_raycast.get_collider()
+		var point: Vector3 = attack_raycast.get_collision_point()
 		print("Shot hit: %s at %s" % [collider.name, point])
 		if collider.has_method("take_damage"):
 			collider.take_damage(weapon.damage, player)

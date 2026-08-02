@@ -16,11 +16,11 @@ var active_slot_index: int = 0
 
 func _ready() -> void:
 	slots.clear()
-	for i in range(MAX_SLOTS):
+	for i: int in range(MAX_SLOTS):
 		slots.append(InventorySlot.new())
 
 func set_active_slot(index: int) -> void:
-	var clamped_index := posmod(index, MAX_SLOTS)
+	var clamped_index: int = posmod(index, MAX_SLOTS)
 	if active_slot_index != clamped_index:
 		active_slot_index = clamped_index
 		active_slot_changed.emit(active_slot_index, get_active_item())
@@ -31,14 +31,14 @@ func get_active_slot() -> InventorySlot:
 	return null
 
 func get_active_item() -> ItemData:
-	var slot := get_active_slot()
+	var slot: InventorySlot = get_active_slot()
 	return slot.item if slot else null
 
 func set_slot_item(slot_index: int, item: ItemData, count: int = 1, current_ammo: int = -1) -> void:
 	if slot_index < 0 or slot_index >= MAX_SLOTS:
 		return
 		
-	var slot := slots[slot_index]
+	var slot: InventorySlot = slots[slot_index]
 	slot.item = item
 	slot.count = count
 	if item is WeaponData and (item as WeaponData).weapon_type == WeaponData.WeaponType.RANGED:
@@ -56,7 +56,7 @@ func add_item(item: ItemData, count: int = 1) -> bool:
 		
 	# Try stacking
 	if item.is_stackable:
-		for slot in slots:
+		for slot: InventorySlot in slots:
 			if slot.item and slot.item.id == item.id and slot.count < item.max_stack:
 				slot.count += count
 				inventory_updated.emit()
@@ -64,7 +64,7 @@ func add_item(item: ItemData, count: int = 1) -> bool:
 				return true
 
 	# Find empty slot
-	for i in range(MAX_SLOTS):
+	for i: int in range(MAX_SLOTS):
 		if slots[i].item == null:
 			set_slot_item(i, item, count)
 			return true
@@ -72,7 +72,7 @@ func add_item(item: ItemData, count: int = 1) -> bool:
 	return false # Inventory full
 
 func remove_active_item(amount: int = 1) -> void:
-	var slot := get_active_slot()
+	var slot: InventorySlot = get_active_slot()
 	if not slot or not slot.item:
 		return
 		

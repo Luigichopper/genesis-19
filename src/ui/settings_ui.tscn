@@ -1,6 +1,10 @@
 [gd_scene format=3 uid="uid://c8d2k8m4y3q2x"]
 
 [ext_resource type="Script" uid="uid://4vhkcrfb2m8v" path="res://src/ui/settings_ui.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://i3g2vvxs3a5a" path="res://src/ui/settings_tabs/audio_settings_tab.gd" id="2_47o7l"]
+[ext_resource type="Script" uid="uid://dy2lqirn5gs1e" path="res://src/ui/settings_tabs/voice_settings_tab.gd" id="3_phi1l"]
+[ext_resource type="Script" uid="uid://efpw1h0ert8r" path="res://src/ui/settings_tabs/visuals_settings_tab.gd" id="4_x2iyw"]
+[ext_resource type="Script" uid="uid://bqdqdntxqmfri" path="res://src/ui/settings_tabs/keybinds_settings_tab.gd" id="5_twjgp"]
 
 [node name="SettingsUI" type="Control" unique_id=589040503]
 process_mode = 3
@@ -11,6 +15,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
+
+[node name="BackgroundDim" type="ColorRect" parent="." unique_id=15697454]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.65)
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1472621719]
 layout_mode = 1
@@ -44,6 +58,7 @@ current_tab = 0
 [node name="AudioTab" type="VBoxContainer" parent="PanelContainer/VBoxContainer/TabContainer" unique_id=161612396]
 layout_mode = 2
 theme_override_constants/separation = 10
+script = ExtResource("2_47o7l")
 metadata/_tab_index = 0
 
 [node name="MasterLabel" type="Label" parent="PanelContainer/VBoxContainer/TabContainer/AudioTab" unique_id=74322076]
@@ -95,6 +110,7 @@ step = 0.01
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 12
+script = ExtResource("3_phi1l")
 metadata/_tab_index = 1
 
 [node name="PTTModeButton" type="CheckButton" parent="PanelContainer/VBoxContainer/TabContainer/VoiceTab" unique_id=161331657]
@@ -119,6 +135,7 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 12
+script = ExtResource("4_x2iyw")
 metadata/_tab_index = 2
 
 [node name="WindowModeLabel" type="Label" parent="PanelContainer/VBoxContainer/TabContainer/VisualsTab" unique_id=1849204810]
@@ -150,6 +167,7 @@ value = 1.0
 [node name="KeybindsTab" type="ScrollContainer" parent="PanelContainer/VBoxContainer/TabContainer" unique_id=1829401928]
 visible = false
 layout_mode = 2
+script = ExtResource("5_twjgp")
 metadata/_tab_index = 3
 
 [node name="KeybindsContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/TabContainer/KeybindsTab" unique_id=1948204910]

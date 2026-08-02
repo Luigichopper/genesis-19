@@ -3,9 +3,14 @@
 [ext_resource type="Script" uid="uid://ctjskahdcayvm" path="res://src/player.gd" id="1_lowyb"]
 [ext_resource type="Shader" uid="uid://dfmo2yv102t04" path="res://src/main.gdshader" id="2_ehvfd"]
 [ext_resource type="Script" uid="uid://ba4ulsdv4t86q" path="res://src/voice_chat.gd" id="2_gmfve"]
-[ext_resource type="PackedScene" uid="uid://dsxcgki4beill" path="res://src/ui/hud_ui.tscn" id="3_hudsc"]
 [ext_resource type="Script" uid="uid://bbkvbmiia1xkj" path="res://src/inventory/inventory_component.gd" id="4_inv"]
+[ext_resource type="Script" uid="uid://cjhsc5dwr2onb" path="res://src/stamina_component.gd" id="5_21lrq"]
 [ext_resource type="Script" uid="uid://b5y3fri605rri" path="res://src/weapon_controller.gd" id="5_wep"]
+[ext_resource type="Script" uid="uid://pkkc5vdm5pmd" path="res://src/health_component.gd" id="6_health"]
+[ext_resource type="Script" uid="uid://bta2o7ijdp17i" path="res://src/player/state_machine/state_machine.gd" id="8_ndfpv"]
+[ext_resource type="Script" uid="uid://crmerjfnnoppn" path="res://src/player/state_machine/idle_state.gd" id="9_dxtnc"]
+[ext_resource type="Script" uid="uid://7hqxiif75v6b" path="res://src/player/state_machine/walking_state.gd" id="10_nic3v"]
+[ext_resource type="Script" uid="uid://bs3khe4u3jupr" path="res://src/player/state_machine/interacting_state.gd" id="11_fxwnc"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sh265"]
 properties/0/path = NodePath(".:position")
@@ -30,7 +35,6 @@ material = SubResource("ShaderMaterial_3cfgd")
 
 [node name="Player" type="CharacterBody3D" unique_id=140702344]
 script = ExtResource("1_lowyb")
-stamina_recovery_percent = 0.5
 head_bob_frequency = 2.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1783836617]
@@ -72,9 +76,6 @@ light_color = Color(1, 0.85, 0.3, 1)
 light_energy = 3.0
 omni_range = 4.0
 
-[node name="InventoryComponent" type="Node" parent="." unique_id=1829401928]
-script = ExtResource("4_inv")
-
 [node name="CeilingCheck" type="RayCast3D" parent="." unique_id=1920482910]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 target_position = Vector3(0, 1.2, 0)
@@ -85,4 +86,25 @@ script = ExtResource("2_gmfve")
 [node name="VoicePlayer" type="AudioStreamPlayer3D" parent="VoiceChat" unique_id=1053419512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 
-[node name="HUD" parent="." unique_id=722855369 instance=ExtResource("3_hudsc")]
+[node name="Components" type="Node" parent="." unique_id=2063749802]
+
+[node name="HealthComponent" type="Node" parent="Components" unique_id=575381855]
+script = ExtResource("6_health")
+
+[node name="StaminaComponent" type="Node" parent="Components" unique_id=1678827603]
+script = ExtResource("5_21lrq")
+
+[node name="InventoryComponent" type="Node" parent="Components" unique_id=1829401928]
+script = ExtResource("4_inv")
+
+[node name="StateMachine" type="Node" parent="." unique_id=338122051]
+script = ExtResource("8_ndfpv")
+
+[node name="Idle" type="Node" parent="StateMachine" unique_id=1198367239]
+script = ExtResource("9_dxtnc")
+
+[node name="Walking" type="Node" parent="StateMachine" unique_id=1413282141]
+script = ExtResource("10_nic3v")
+
+[node name="Interacting" type="Node" parent="StateMachine" unique_id=1413282142]
+script = ExtResource("11_fxwnc")

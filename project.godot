@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 ConfigManager="*uid://b5f24xgb3lbdb"
 NetworkManager="*uid://c2336iil3epny"
+EventBus="*uid://bq4gnf6g35x5g"
 
 [debug]
 

@@ -29,7 +29,7 @@ func _update_visuals() -> void:
 			mesh_instance.mesh = item_data.held_mesh
 		
 		if label_3d:
-			var txt := item_data.display_name
+			var txt: String = item_data.display_name
 			if count > 1:
 				txt += " x%d" % count
 			if ammo >= 0:
@@ -40,17 +40,24 @@ func interact(player: CharacterBody3D) -> void:
 	if not player or not item_data:
 		return
 
-	var inventory: InventoryComponent = player.get_node_or_null("InventoryComponent")
+	var inventory: InventoryComponent = null
+	if "inventory" in player and player.inventory:
+		inventory = player.inventory as InventoryComponent
+	elif player.has_node("Components/InventoryComponent"):
+		inventory = player.get_node("Components/InventoryComponent") as InventoryComponent
+	elif player.has_node("InventoryComponent"):
+		inventory = player.get_node("InventoryComponent") as InventoryComponent
+
 	if inventory:
-		var current_ammo := ammo
+		var current_ammo: int = ammo
 		if item_data is WeaponData and current_ammo < 0:
 			current_ammo = (item_data as WeaponData).max_ammo
 
-		var added := inventory.add_item(item_data, count)
+		var added: bool = inventory.add_item(item_data, count)
 		if added:
 			# If we picked up a ranged weapon, update the ammo count on the active/target slot
 			if item_data is WeaponData and (item_data as WeaponData).weapon_type == WeaponData.WeaponType.RANGED:
-				for slot in inventory.slots:
+				for slot: InventoryComponent.InventorySlot in inventory.slots:
 					if slot.item == item_data:
 						slot.current_ammo = current_ammo
 						break
