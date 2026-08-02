@@ -32,9 +32,6 @@ func _input(event: InputEvent) -> void:
 		if is_inside_tree():
 			get_viewport().set_input_as_handled()
 
-
-
-
 func toggle_pause() -> void:
 	visible = not visible
 
@@ -53,18 +50,20 @@ func _update_player_list() -> void:
 	for child in player_list_container.get_children():
 		child.queue_free()
 
-	if NetworkManager.players.size() > 0:
-		for steam_id in NetworkManager.players:
-			var player_info: Dictionary = NetworkManager.players[steam_id]
-			var pname: String = player_info.get("name", "Player %s" % steam_id)
-			var label := Label.new()
-			label.text = "• " + pname
+	var members: Array = NetworkManager.get_lobby_members()
+	if members.size() > 0:
+		for member: Dictionary in members:
+			var pname: String = member.get("name", "Operative")
+			var is_host_flag: bool = member.get("is_host", false)
+			var label: Label = Label.new()
+			var suffix: String = " (Host)" if is_host_flag else ""
+			label.text = "• " + pname + suffix
 			player_list_container.add_child(label)
 	else:
-		# Fallback display for current local session
-		var self_name := Steam.getPersonaName() if Steam.getPersonaName() != "" else "Local Operative"
-		var label := Label.new()
-		label.text = "• " + self_name
+		# Fallback display for standalone local session
+		var self_name: String = Steam.getPersonaName() if Steam.getPersonaName() != "" else "Local Operative"
+		var label: Label = Label.new()
+		label.text = "• " + self_name + " (Host)"
 		player_list_container.add_child(label)
 
 func _on_resume_pressed() -> void:

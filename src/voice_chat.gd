@@ -11,7 +11,15 @@ const SEND_INTERVAL := 0.05
 var _send_timer := 0.0
 var _is_transmitting := false
 
+func is_local_authority() -> bool:
+	if multiplayer.has_multiplayer_peer():
+		return is_multiplayer_authority()
+	var auth: int = get_multiplayer_authority()
+	return auth == 1 or auth == 0 or name == "1"
+
 func _ready() -> void:
+
+	# Voice audio initialization...
 	sample_rate = Steam.getVoiceOptimalSampleRate()
 
 	var generator := AudioStreamGenerator.new()
@@ -22,7 +30,7 @@ func _ready() -> void:
 	voice_player.bus = "VC"
 	voice_player.stream = generator
 
-	if is_multiplayer_authority():
+	if is_local_authority():
 		set_process(true)
 	else:
 		voice_player.play()
@@ -30,9 +38,10 @@ func _ready() -> void:
 		set_process(false)
 
 func _process(delta: float) -> void:
-	if not is_multiplayer_authority():
+	if not is_local_authority():
 		return
 	_handle_local_capture(delta)
+
 
 # ---------- Local capture ----------
 

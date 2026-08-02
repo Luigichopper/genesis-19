@@ -74,12 +74,18 @@ func _enter_tree() -> void:
 		if has_node("MultiplayerSynchronizer"):
 			$MultiplayerSynchronizer.set_multiplayer_authority(authority_id)
 
+func is_local_authority() -> bool:
+	if multiplayer.has_multiplayer_peer():
+		return is_multiplayer_authority()
+	var auth: int = get_multiplayer_authority()
+	return auth == 1 or auth == 0 or name == "1"
+
 func _exit_tree() -> void:
-	if is_multiplayer_authority():
+	if is_local_authority():
 		EventBus.local_player_despawned.emit(self)
 
 func _ready() -> void:
-	var is_local: bool = is_multiplayer_authority()
+	var is_local: bool = is_local_authority()
 	camera.current = is_local
 	set_process_unhandled_input(is_local)
 	set_physics_process(true)
@@ -92,6 +98,7 @@ func _ready() -> void:
 	else:
 		if spot_light:
 			spot_light.visible = flashlight_enabled
+
 
 	camera_start_y = camera.position.y
 	target_cam_y = camera_start_y
@@ -149,7 +156,7 @@ func stop_interaction() -> void:
 		state_machine.transition_to("idle")
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not is_multiplayer_authority() or get_tree().paused:
+	if not is_local_authority() or get_tree().paused:
 		return
 
 	if is_interacting():
@@ -212,21 +219,24 @@ func _handle_drop_item() -> void:
 	# Clear from inventory
 	inventory.remove_active_item(count_to_drop)
 
-	# Spawn world pickup
-	if ITEM_PICKUP_SCENE:
-		var pickup: RigidBody3D = ITEM_PICKUP_SCENE.instantiate() as RigidBody3D
-		get_parent().add_child(pickup)
-		
-		# Position in front of camera
-		var drop_pos: Vector3 = camera.global_position + (-camera.global_transform.basis.z * 1.5)
-		pickup.global_position = drop_pos
-		
-		if pickup.has_method("setup"):
-			pickup.setup(item_to_drop, count_to_drop, ammo_to_drop)
+	# Position & impulse calculation
+	var drop_pos: Vector3 = camera.global_position + (-camera.global_transform.basis.z * 1.5)
+	var impulse: Vector3 = -camera.global_transform.basis.z * 3.0 + Vector3.UP * 1.5
 
-		# Apply outward drop impulse
-		var impulse: Vector3 = -camera.global_transform.basis.z * 3.0 + Vector3.UP * 1.5
-		pickup.apply_central_impulse(impulse)
+	# Request universal spawn from Main across all peers
+	var main_node: Node = get_tree().current_scene
+	if main_node and main_node.has_method("request_spawn_item"):
+		main_node.request_spawn_item.rpc_id(1, item_to_drop.id, count_to_drop, ammo_to_drop, drop_pos, impulse)
+	else:
+		# Fallback local spawn if testing player scene standalone
+		if ITEM_PICKUP_SCENE:
+			var pickup: RigidBody3D = ITEM_PICKUP_SCENE.instantiate() as RigidBody3D
+			get_parent().add_child(pickup)
+			pickup.global_position = drop_pos
+			if pickup.has_method("setup"):
+				pickup.setup(item_to_drop, count_to_drop, ammo_to_drop)
+			pickup.apply_central_impulse(impulse)
+
 
 @rpc("call_local", "reliable", "any_peer")
 func _toggle_flashlight() -> void:
@@ -235,10 +245,9 @@ func _toggle_flashlight() -> void:
 		spot_light.visible = flashlight_enabled
 
 func _physics_process(delta: float) -> void:
-	if not multiplayer.has_multiplayer_peer():
+	if not is_local_authority():
 		return
-	if not is_multiplayer_authority():
-		return
+
 
 	if state_machine:
 		state_machine.physics_update(delta)

@@ -19,8 +19,9 @@ func enter(msg: Dictionary = {}) -> void:
 func exit() -> void:
 	active_ui = null
 	# Recapture mouse when leaving UI
-	if player and player.is_multiplayer_authority():
+	if player and player.has_method("is_local_authority") and player.is_local_authority():
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
 
 func physics_update(delta: float) -> void:
 	if not player:
