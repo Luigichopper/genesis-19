@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://bgbq8ui50vhe8"]
 
 [ext_resource type="Script" uid="uid://ctjskahdcayvm" path="res://src/player.gd" id="1_lowyb"]
-[ext_resource type="Shader" uid="uid://dfmo2yv102t04" path="res://src/main.gdshader" id="2_ehvfd"]
 [ext_resource type="Script" uid="uid://ba4ulsdv4t86q" path="res://src/voice_chat.gd" id="2_gmfve"]
 [ext_resource type="Script" uid="uid://bbkvbmiia1xkj" path="res://src/inventory/inventory_component.gd" id="4_inv"]
 [ext_resource type="Script" uid="uid://cjhsc5dwr2onb" path="res://src/stamina_component.gd" id="5_21lrq"]
@@ -21,17 +20,8 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tihks"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3cfgd"]
-render_priority = 0
-shader = ExtResource("2_ehvfd")
-shader_parameter/affine_mapping = false
-shader_parameter/alpha_scissor = 0.5
-shader_parameter/jitter = 0.25
-shader_parameter/resolution = Vector2i(320, 240)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_ihbif"]
-material = SubResource("ShaderMaterial_3cfgd")
+radius = 0.3
+height = 1.9
 
 [node name="Player" type="CharacterBody3D" unique_id=140702344]
 script = ExtResource("1_lowyb")
@@ -42,10 +32,6 @@ replication_config = SubResource("SceneReplicationConfig_sh265")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1894758636]
 shape = SubResource("CapsuleShape3D_tihks")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1201812865]
-visible = false
-mesh = SubResource("CapsuleMesh_ihbif")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1999194903]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -0.2)
