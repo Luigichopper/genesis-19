@@ -136,7 +136,7 @@ func save_settings() -> void:
 	config.save(SAVE_PATH)
 	apply_visual_settings()
 	apply_keybind_settings()
-	print("Settings saved")
+	print_debug("Settings saved")
 
 func load_settings() -> void:
 	var config := ConfigFile.new()

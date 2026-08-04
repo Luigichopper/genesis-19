@@ -157,6 +157,10 @@ text = "Smooth Texture Filter (Linear)"
 layout_mode = 2
 text = "CRT Scanlines"
 
+[node name="BrightnessLabel" type="Label" parent="PanelContainer/VBoxContainer/TabContainer/VisualsTab" unique_id=855011022]
+layout_mode = 2
+text = "Brightness"
+
 [node name="BrightnessSlider" type="HSlider" parent="PanelContainer/VBoxContainer/TabContainer/VisualsTab" unique_id=282577960]
 layout_mode = 2
 min_value = 0.5
