@@ -147,9 +147,9 @@ func take_damage(amount: float, attacker: Node = null) -> void:
 func is_interacting() -> bool:
 	return state_machine != null and state_machine.current_state is InteractingState
 
-func start_interaction(ui_node: Node = null) -> void:
+func start_interaction(interactable: InteractableObject = null, ui_scene: PackedScene = null) -> void:
 	if state_machine:
-		state_machine.transition_to("interacting", {"ui": ui_node})
+		state_machine.transition_to("interacting", {"interactable": interactable, "ui_scene": ui_scene})
 
 func stop_interaction() -> void:
 	if state_machine and is_interacting():

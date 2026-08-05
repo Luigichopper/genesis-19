@@ -45,7 +45,25 @@ func set_slot_item(slot_index: int, item: ItemData, count: int = 1, current_ammo
 		slot.current_ammo = current_ammo if current_ammo >= 0 else (item as WeaponData).max_ammo
 	else:
 		slot.current_ammo = 0
-		
+
+	inventory_updated.emit()
+	if slot_index == active_slot_index:
+		active_slot_changed.emit(active_slot_index, get_active_item())
+
+	if multiplayer.has_multiplayer_peer() and multiplayer.is_server():
+		var item_id: String = item.id if item else ""
+		_sync_slot_item.rpc(slot_index, item_id, count, slot.current_ammo)
+
+@rpc("authority", "call_remote", "reliable")
+func _sync_slot_item(slot_index: int, item_id: String, count: int, current_ammo: int) -> void:
+	if slot_index < 0 or slot_index >= MAX_SLOTS:
+		return
+	var item_data: ItemData = ItemRegistry.get_item_by_id(item_id) if item_id != "" else null
+	var slot: InventorySlot = slots[slot_index]
+	slot.item = item_data
+	slot.count = count
+	slot.current_ammo = current_ammo
+
 	inventory_updated.emit()
 	if slot_index == active_slot_index:
 		active_slot_changed.emit(active_slot_index, get_active_item())

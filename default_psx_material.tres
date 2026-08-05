@@ -2,10 +2,13 @@
 
 [ext_resource type="Shader" uid="uid://dfmo2yv102t04" path="res://src/main.gdshader" id="1_mhdja"]
 
+[sub_resource type="Texture2DRD" id="Texture2DRD_mhdja"]
+
 [resource]
 render_priority = 0
 shader = ExtResource("1_mhdja")
 shader_parameter/affine_mapping = false
+shader_parameter/albedo = SubResource("Texture2DRD_mhdja")
 shader_parameter/alpha_scissor = 0.5
 shader_parameter/jitter = 0.25
 shader_parameter/resolution = Vector2i(320, 240)

@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://bw8ojyq762gl8" path="res://assets/wall.png" id="6_rlaii"]
 [ext_resource type="Texture2D" uid="uid://b1b1knx72lk0a" path="res://assets/wall_normal.png" id="7_5mrjc"]
 [ext_resource type="PackedScene" uid="uid://dsxcgki4beill" path="res://src/ui/hud_ui.tscn" id="8_5mrjc"]
+[ext_resource type="PackedScene" uid="uid://b8x3m0v7p1q4w" path="res://src/interactables/interactable_chest.tscn" id="9_chest"]
+[ext_resource type="PackedScene" uid="uid://c9n4m2v8q5p2k" path="res://src/interactables/interactable_terminal.tscn" id="10_terminal"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_3cfgd"]
 panorama = ExtResource("2_5q4o7")
@@ -78,6 +80,12 @@ spawn_path = NodePath("../ItemContainer")
 
 [node name="ItemContainer" type="Node3D" parent="World" unique_id=661282254]
 unique_name_in_owner = true
+
+[node name="InteractableChest" parent="World" instance=ExtResource("9_chest")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.4, -2.5)
+
+[node name="InteractableTerminal" parent="World" instance=ExtResource("10_terminal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.7, -2.5)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="World" unique_id=1773821615]
 physics_material_override = SubResource("PhysicsMaterial_tihks")

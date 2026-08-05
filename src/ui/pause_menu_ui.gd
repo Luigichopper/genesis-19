@@ -27,7 +27,14 @@ func _input(event: InputEvent) -> void:
 		if settings_ui and settings_ui.visible:
 			# If settings UI is open inside pause menu, let settings close
 			return
-			
+
+		# If local player is currently interacting with an object/chest/terminal:
+		if EventBus.local_player and EventBus.local_player.has_method("is_interacting") and EventBus.local_player.is_interacting():
+			EventBus.local_player.stop_interaction()
+			if is_inside_tree():
+				get_viewport().set_input_as_handled()
+			return
+
 		toggle_pause()
 		if is_inside_tree():
 			get_viewport().set_input_as_handled()
